@@ -4,6 +4,7 @@
   "description": "fashionista is website for online shopping of fashion items and accessories",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
