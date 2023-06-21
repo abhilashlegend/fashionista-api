@@ -30,6 +30,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/admin", require("./routes/admin"));
+app.use("/productcategory", require("./routes/productcategory"));
 
 app.listen(8080, () => {
     console.log("server is now listening to http://localhost:8080/");
