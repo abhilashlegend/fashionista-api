@@ -69,6 +69,33 @@ router.get("/getbypcid", async(req, res) => {
     } catch (error) {
         res.end(JSON.stringify({status: "failure", data: "Error: " + error}));
     }
+});
+
+router.get("/get", async(req, res) => {
+    try {
+        const body = req.body;
+        const id = body.data.id;
+        
+        if(id != ""){
+            const product = Product.findById(id);
+            res.send(JSON.stringify({status: "success", data: product}));
+        } else {
+            res.send(JSON.stringify({status: "failure", data: "Error: Id not found"}));
+        }
+
+    } catch (error) {
+        res.end(JSON.stringify({status: "failure", data: "Error: " + error}));        
+    }
+});
+
+router.delete("/delete", async(req, res) => {
+    try {
+        let body = req.body;
+        await Product.findByIdAndDelete(body.data.id);
+        res.end(JSON.stringify({status: "success"}));
+    } catch (error) {
+        res.end(JSON.stringify({status: "failure", data: "Error: " + error}));    
+    }
 })
 
 module.exports = router;
