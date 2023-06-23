@@ -40,6 +40,19 @@ router.post("/save", async(req, res) => {
     } catch (error) {
         res.end(JSON.stringify({status: "failed", data: "Something went wrong! Error: " + error}));
     }
+});
+
+router.get("/list", async (req, res) => {
+    try {
+        const products = await Product.find();
+        if(products){
+            res.send(JSON.stringify({status: "success", data: products}));
+        } else {
+            res.send(JSON.stringify({status: "failure", data: "No products found"}))
+        }   
+    } catch (error) {
+        res.end(JSON.stringify({status: "failure", data: "Error: " + error}));
+    }
 })
 
 module.exports = router;
