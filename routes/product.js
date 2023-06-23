@@ -55,4 +55,20 @@ router.get("/list", async (req, res) => {
     }
 })
 
+router.get("/getbypcid", async(req, res) => {
+    try {
+        const body = req.body;
+        const pcid = body.data.pcid;
+
+        if(pcid != ""){
+            const products = await Product.find({pcid: pcid});
+            res.end(JSON.stringify({status: "success", data: products}))
+        } else {
+            res.end(JSON.stringify({status: "failure", data: "Error: Please enter pcid"}));
+        }
+    } catch (error) {
+        res.end(JSON.stringify({status: "failure", data: "Error: " + error}));
+    }
+})
+
 module.exports = router;
