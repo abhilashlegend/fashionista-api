@@ -96,6 +96,46 @@ router.delete("/delete", async(req, res) => {
     } catch (error) {
         res.end(JSON.stringify({status: "failure", data: "Error: " + error}));    
     }
+});
+
+router.post("/savevariety", async (req, res) => {
+    try {
+        const body = req.body;
+        let product = new Product();
+        product = await Product.findById(body.data.id);
+        product.varieties.push(body.data.variety);
+        product.save().then(result => {
+            res.send(JSON.stringify({status: "success", data: result}));
+        }, err => {
+            res.send(JSON.stringify({status: "failure", data: err}));
+        })
+    } catch (error) {
+        res.end(JSON.stringify({status: "failure", data: "Error: " + error}));  
+    }
+});
+
+router.post("/deletevariety", async (req, res) => {
+    try {
+        let body = req.body;
+        let product = new Product();
+        product = await Product.findById(body.data.id);
+        let varieties = [];
+        for(let i = 0; i < product.varieties.length; i++){
+            if(product.varieties[i].color != body.data.variety.color || product.varieties[i].color != body.data.variety.size){
+                varieties.push(product.varieties[i]);
+            }
+        }
+        product.varieties = varieties;
+        product.save().then(result => {
+            res.send(JSON.stringify({status: "success", data: result}));
+        }, err => {
+            res.send(JSON.stringify({status: "failed", data: err}));
+        })
+
+
+    } catch (error) {
+        
+    }
 })
 
 module.exports = router;
