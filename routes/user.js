@@ -52,7 +52,16 @@ router.post("/login", async(req, res) => {
         }
 
     } catch (error) {
-        res.end(JSON.stringify({status: "failed", data: "Something went wrong!"}))
+        res.end(JSON.stringify({status: "failed", data: "Something went wrong!" + error}))
+    }
+});
+
+router.get("/users", async (req, res) => {
+    try {
+        const users = await User.find();
+        res.send(JSON.stringify({status: "success", data: users}));
+    } catch (error) {
+        res.end(JSON.stringify({status: "failed", data: "Something went wrong!" + error}))
     }
 })
 
