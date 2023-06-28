@@ -1,0 +1,18 @@
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const schema = new Schema({
+    userid: {type: String, required: true},
+    orderdate: {type: Date, required: true},
+    address: {type: String, required: true},
+    city: {type: String, required: true},
+    state: {type: String, required: true},
+    pincode: {type: Number, required: true},
+    totalamount: {type: Number, required: true},
+    shipmentamount: {type: Number, required: true},
+    billamount: {type:Number, required: true},
+    status: {type: String, required: true},
+    products: []
+});
+
+let Order = mongoose.model("orders", schema);
+module.exports = Order;
