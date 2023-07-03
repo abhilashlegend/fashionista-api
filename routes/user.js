@@ -61,6 +61,16 @@ router.get("/users", async (req, res) => {
         const users = await User.find();
         res.send(JSON.stringify({status: "success", data: users}));
     } catch (error) {
+        res.end(JSON.stringify({status: "failed", data: "Something went wrong!" + error}));
+    }
+});
+
+router.get("/orders", async (req, res) => {
+    try {
+        const body = req.body;
+        const orders = await Order.find({userid: body.data.userid});
+        res.send(JSON.stringify({status: "success", data: orders}));
+    } catch (error) {
         res.end(JSON.stringify({status: "failed", data: "Something went wrong!" + error}))
     }
 })

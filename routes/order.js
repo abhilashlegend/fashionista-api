@@ -34,9 +34,22 @@ router.patch("/markpaid", async(req, res) => {
     try {
         const body = req.body;
         const order = await Order.findByIdAndUpdate(body.data.id, {$set: {status: "paid"}}, {new: true});
-        res.send(JSON.stringify({status: "success", data: "Payment marked successfully"}));
+        res.send(JSON.stringify({status: "success", data: order }));
     } catch (error) {
         res.end(JSON.stringify({status: "failed", data: "Something went wrong!" + error}));
+    }
+});
+
+router.get("/orders", async(req, res) => {
+    try {
+        const orders = await Order.find();
+        if(orders.length > 0){
+            res.send(JSON.stringify({status: "success", data: orders }));
+        } else {
+            res.send(JSON.stringify({status: "failed", data: "Orders not found"}));
+        }
+    } catch (error) {
+        res.end(JSON.stringify({status: "failed", data: "Something went wrong!" + error}))
     }
 })
 
