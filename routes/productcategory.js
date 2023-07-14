@@ -16,9 +16,9 @@ router.post("/save", async(req, res) => {
         let base64image = body.data.image;
         if(base64image != ""){
             let randomname = (Math.random() + 1).toString(36).substring(7);
-            base64image = base64image.replace(/^data:image\*;base64,/, "");
+            base64image = base64image.replace(/^data:image\/\w+;base64,/, "");
             productcategory.imagePath = "productcategories/" + randomname + ".png";
-            fs.writeFile('assets/' + productcategory.imagePath, base64image, 'base64', function(err) {
+            await fs.writeFile('assets/' + productcategory.imagePath, base64image, 'base64', function(err) {
                 if(err)
                     console.log("Error while saving image " + err);
             })
@@ -53,10 +53,10 @@ router.get("/get", async(req,res) => {
     }
 });
 
-router.delete("/delete", async(req, res) => {
+router.delete("/delete/:id", async(req, res) => {
     try {
-        const body = req.body;
-        await Productcategory.findByIdAndDelete(body.data.id);
+        const id = req.params.id;
+        await Productcategory.findByIdAndDelete(id);
         res.end(JSON.stringify({status: "success"}));
     } catch (error) {
         res.end(JSON.stringify({status: "failed", data: "Something went wrong!"}))

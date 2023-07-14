@@ -1,8 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyparser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
+
+app.use(cors());
 app.use(express.static("assets"));
 app.use(express.json());
 app.use(bodyparser.json({limit: '50mb'}));
@@ -34,6 +37,7 @@ app.use("/productcategory", require("./routes/productcategory"));
 app.use("/product", require("./routes/product"));
 app.use("/user", require("./routes/user"));
 app.use("/order", require("./routes/order"));
+
 
 app.listen(8080, () => {
     console.log("server is now listening to http://localhost:8080/");
