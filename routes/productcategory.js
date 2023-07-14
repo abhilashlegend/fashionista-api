@@ -43,10 +43,10 @@ router.get("/list", async(req, res) => {
     }
 });
 
-router.get("/get", async(req,res) => {
+router.get("/get/:id", async(req,res) => {
     try {
-        const body = req.body;
-        const productcategory = await Productcategory.findById(body.data.id);
+        const id = req.params.id;
+        const productcategory = await Productcategory.findById(id);
         res.send(JSON.stringify({status: "success", data: productcategory}));
     } catch (error) {
         res.send(JSON.stringify({status: "failure", data: "Something went wrong!" + error}));
