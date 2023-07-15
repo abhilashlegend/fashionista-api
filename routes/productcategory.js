@@ -11,6 +11,7 @@ router.post("/save", async(req, res) => {
         if(body.data.id != ""){
             productcategory = await Productcategory.findById(body.data.id);
         }
+        console.log(body.data.id);
         productcategory.name = body.data.name;
         productcategory.srno = body.data.srno;
         let base64image = body.data.image;
@@ -33,6 +34,46 @@ router.post("/save", async(req, res) => {
     }
     
 });
+
+router.put('/update/:id', async(req, res) => {
+    try {
+        const id = req.params.id;
+        const updatedData = req.body;
+        productcategory = await Productcategory.findById(id);
+        if (!productcategory) {
+            return res.status(404).json({ status: 'error', message: 'Record not found' });
+          }
+        productcategory.name = updatedData.name;
+        productcategory.srno = updatedData.srno;
+        if (updatedData.image) {
+            // Delete the existing image file
+            fs.unlink(`assets/${productcategory.imagePath}`, (err) => {
+              if (err) {
+                console.error('Error while deleting existing image:', err);
+              }
+            });
+      
+            // Save the new image
+            const randomname = (Math.random() + 1).toString(36).substring(7);
+            const base64image = updatedData.image.replace(/^data:image\/\w+;base64,/, "");
+            const imagePath = `productcategories/${randomname}.png`;
+      
+            fs.writeFile(`assets/${imagePath}`, base64image, 'base64', (err) => {
+              if (err) {
+                console.error('Error while saving new image:', err);
+              }
+            });
+      
+            productcategory.imagePath = imagePath;
+          }
+          const result = await productcategory.save();
+          res.json({ status: 'success', data: result });
+
+    }
+    catch(error) {
+        res.end(JSON.stringify({status: "failed", data: "Something went wrong!" + error }));
+    }
+})
 
 router.get("/list", async(req, res) => {
     try {
