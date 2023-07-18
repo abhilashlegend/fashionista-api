@@ -81,6 +81,54 @@ router.get("/get/:id", async(req, res) => {
     }
 });
 
+router.put('/update/:id', async(req, res) => {
+    try {
+        const id = req.params.id;
+        const updatedData = req.body;
+        product = await Product.findById(id);
+        if (!product) {
+            return res.status(404).json({ status: 'error', message: 'Record not found' });
+          }
+          product.name = updatedData.name;
+          product.pcid = updatedData.pcid;
+          product.description = updatedData.description;
+          product.specification = updatedData.specification;
+          product.mrp = updatedData.mrp;
+          product.price = updatedData.price;
+          product.varieties = updatedData.varieties;
+          product.instock = updatedData.instock;
+          product.isactive = updatedData.isactive;
+        if (updatedData.image) {
+            // Delete the existing image file
+            fs.unlink(`assets/${product.imagePath}`, (err) => {
+              if (err) {
+                console.error('Error while deleting existing image:', err);
+              }
+            });
+      
+            // Save the new image
+            const randomname = (Math.random() + 1).toString(36).substring(7);
+            const base64image = updatedData.image.replace(/^data:image\/\w+;base64,/, "");
+            const imagePath = `product/${randomname}.png`;
+      
+            fs.writeFile(`assets/${imagePath}`, base64image, 'base64', (err) => {
+              if (err) {
+                console.error('Error while saving new image:', err);
+              }
+            });
+      
+            product.imagePath = imagePath;
+          }
+          const result = await product.save();
+          res.json({ status: 'success', data: result });
+
+    }
+    catch(error) {
+        res.end(JSON.stringify({status: "failed", data: "Something went wrong!" + error }));
+    }
+})
+
+
 router.delete("/delete", async(req, res) => {
     try {
         let body = req.body;
