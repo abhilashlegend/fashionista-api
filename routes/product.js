@@ -71,18 +71,11 @@ router.get("/getbypcid", async(req, res) => {
     }
 });
 
-router.get("/get", async(req, res) => {
+router.get("/get/:id", async(req, res) => {
     try {
-        const body = req.body;
-        const id = body.data.id;
-        
-        if(id != ""){
-            const product = Product.findById(id);
-            res.send(JSON.stringify({status: "success", data: product}));
-        } else {
-            res.send(JSON.stringify({status: "failure", data: "Error: Id not found"}));
-        }
-
+        const id = req.params.id;
+        const product = await Product.findById(id);
+        res.send(JSON.stringify({status: "success", data: product}));
     } catch (error) {
         res.end(JSON.stringify({status: "failure", data: "Error: " + error}));        
     }
@@ -134,7 +127,7 @@ router.post("/deletevariety", async (req, res) => {
 
 
     } catch (error) {
-        
+        res.end(JSON.stringify({status: "failure", data: "Error: " + error})); 
     }
 })
 
