@@ -11,7 +11,6 @@ router.post("/save", async(req, res) => {
         if(body.data.id != ""){
             productcategory = await Productcategory.findById(body.data.id);
         }
-        console.log(body.data.id);
         productcategory.name = body.data.name;
         productcategory.srno = body.data.srno;
         let base64image = body.data.image;

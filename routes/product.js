@@ -11,8 +11,10 @@ router.post("/save", async(req, res) => {
         const body = req.body;
         const product = new Product();
         if(body.data.id != ""){
-            productcategory = await Product.findById(body.data.id);
+            product = await Product.findById(body.data.id);
         }
+        console.log(body.data);
+        console.log(req.headers);
         product.pcid = body.data.pcid;
         product.name = body.data.name;
         product.description = body.data.description;
@@ -25,7 +27,7 @@ router.post("/save", async(req, res) => {
         let base64image = body.data.imagePath;
         if(base64image != ""){
             let randomname = (Math.random() + 1).toString(36).substring(7);
-            base64image = base64image.replace(/^data:image\*;base64,/, "");
+            base64image = base64image.replace(/^data:image\/\w+;base64,/, "");
             product.imagePath = "products/" + randomname + ".png";
             fs.writeFile("assets/" + product.imagePath, base64image, 'base64', function(err){
                 if(err)
@@ -129,10 +131,10 @@ router.put('/update/:id', async(req, res) => {
 })
 
 
-router.delete("/delete", async(req, res) => {
+router.delete("/delete/:id", async(req, res) => {
     try {
-        let body = req.body;
-        await Product.findByIdAndDelete(body.data.id);
+        let id = req.params.id;
+        await Product.findByIdAndDelete(id);
         res.end(JSON.stringify({status: "success"}));
     } catch (error) {
         res.end(JSON.stringify({status: "failure", data: "Error: " + error}));    
