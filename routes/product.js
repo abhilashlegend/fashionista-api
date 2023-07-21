@@ -164,7 +164,7 @@ router.post("/deletevariety", async (req, res) => {
         product = await Product.findById(body.data.id);
         let varieties = [];
         for(let i = 0; i < product.varieties.length; i++){
-            if(product.varieties[i].color != body.data.variety.color || product.varieties[i].color != body.data.variety.size){
+            if(product.varieties[i].color != body.data.variety.color || product.varieties[i].size != body.data.variety.size){
                 varieties.push(product.varieties[i]);
             }
         }
