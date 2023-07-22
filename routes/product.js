@@ -13,8 +13,7 @@ router.post("/save", async(req, res) => {
         if(body.data.id != ""){
             product = await Product.findById(body.data.id);
         }
-        console.log(body.data);
-        console.log(req.headers);
+       
         product.pcid = body.data.pcid;
         product.name = body.data.name;
         product.description = body.data.description;
@@ -57,13 +56,14 @@ router.get("/list", async (req, res) => {
     }
 })
 
-router.get("/getbypcid", async(req, res) => {
+router.post("/getbypcid", async(req, res) => {
     try {
         const body = req.body;
         const pcid = body.data.pcid;
-
+       
         if(pcid != ""){
             const products = await Product.find({pcid: pcid});
+            
             res.end(JSON.stringify({status: "success", data: products}))
         } else {
             res.end(JSON.stringify({status: "failure", data: "Error: Please enter pcid"}));
