@@ -28,7 +28,7 @@ router.post("/save", async(req, res) => {
             let randomname = (Math.random() + 1).toString(36).substring(7);
             base64image = base64image.replace(/^data:image\/\w+;base64,/, "");
             product.imagePath = "products/" + randomname + ".png";
-            fs.writeFile("assets/" + product.imagePath, base64image, 'base64', function(err){
+            await fs.writeFile("assets/" + product.imagePath, base64image, 'base64', function(err){
                 if(err)
                     console.log("Error while saving image " + err);
             });        
@@ -100,7 +100,7 @@ router.put('/update/:id', async(req, res) => {
           product.varieties = updatedData.varieties;
           product.instock = updatedData.instock;
           product.isactive = updatedData.isactive;
-        if (updatedData.image) {
+        if (updatedData.imagePath) {
             // Delete the existing image file
             fs.unlink(`assets/${product.imagePath}`, (err) => {
               if (err) {
@@ -110,10 +110,10 @@ router.put('/update/:id', async(req, res) => {
       
             // Save the new image
             const randomname = (Math.random() + 1).toString(36).substring(7);
-            const base64image = updatedData.image.replace(/^data:image\/\w+;base64,/, "");
-            const imagePath = `product/${randomname}.png`;
+            const base64image = updatedData.imagePath.replace(/^data:image\/\w+;base64,/, "");
+            const imagePath = `products/${randomname}.png`;
       
-            fs.writeFile(`assets/${imagePath}`, base64image, 'base64', (err) => {
+            await fs.writeFile(`assets/${imagePath}`, base64image, 'base64', (err) => {
               if (err) {
                 console.error('Error while saving new image:', err);
               }
@@ -134,6 +134,13 @@ router.put('/update/:id', async(req, res) => {
 router.delete("/delete/:id", async(req, res) => {
     try {
         let id = req.params.id;
+        const product = Product.findById(id);
+        fs.unlink(`assets/${product.imagePath}`, (err) => {
+            if (err) {
+              console.error('Error while deleting existing image:', err);
+            }
+          });
+
         await Product.findByIdAndDelete(id);
         res.end(JSON.stringify({status: "success"}));
     } catch (error) {

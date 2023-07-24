@@ -57,7 +57,7 @@ router.put('/update/:id', async(req, res) => {
             const base64image = updatedData.image.replace(/^data:image\/\w+;base64,/, "");
             const imagePath = `productcategories/${randomname}.png`;
       
-            fs.writeFile(`assets/${imagePath}`, base64image, 'base64', (err) => {
+            await fs.writeFileAsync(`assets/${imagePath}`, base64image, 'base64', (err) => {
               if (err) {
                 console.error('Error while saving new image:', err);
               }
