@@ -24,6 +24,9 @@ router.post("/register", async (req, res) => {
         user.email = body.data.email;
         user.mobileno = body.data.mobileno;
         user.address = body.data.address;
+        user.city = body.data.city;
+        user.state = body.data.state;
+        user.pincode = body.data.pincode;
         user.password = body.data.password;
 
         user.save().then(result => {
